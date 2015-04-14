@@ -3,7 +3,7 @@ require 'net/http'
 require 'date'
 require 'iconv'
 
-ic = Iconv.new("utf-8", "big5")
+ic = Iconv.new("utf-8//IGNORE", "big5")
 
 unless File.exists?("TWSE")
 	Dir.mkdir("TWSE")
