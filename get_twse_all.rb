@@ -36,15 +36,16 @@ sel_type = 'ALLBUT0999'
 
 for d in 0..n
 	current_date = input_date + d
-	sel_date = current_date.year - 1911
-	sel_date = sel_date.to_s + current_date.strftime('/%m/%d')
+	unless current_date.saturday? || current_date.sunday? 
+		sel_date = current_date.year - 1911
+		sel_date = sel_date.to_s + current_date.strftime('/%m/%d')
 
-	puts "Getting " + current_date.strftime('%Y/%m/%d')
+		csv = Net::HTTP.post_form(uri,
+		 "qdate"=>sel_date, "download"=>"csv", "selectType"=>sel_type)
 
-	csv = Net::HTTP.post_form(uri,
-	 "qdate"=>sel_date, "download"=>"csv", "selectType"=>sel_type)
-
-	open("TWSE/" + current_date.strftime('%Y%m%d') +".csv", "wb") do |file|
-		file.write((csv.body).encode(Encoding::UTF_8, Encoding::BIG5, :invalid => :replace, :undef => :replace, :replace => ''))
+		open("TWSE/" + current_date.strftime('%Y%m%d') +".csv", "wb") do |file|
+			file.write((csv.body).encode(Encoding::UTF_8, Encoding::BIG5, :invalid => :replace, :undef => :replace, :replace => ''))
+		end
+		puts current_date.strftime('%Y/%m/%d') + 'saved'
 	end
 end
