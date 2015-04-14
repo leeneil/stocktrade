@@ -1,9 +1,6 @@
 # encoding=utf-8
 require 'net/http'
 require 'date'
-require 'iconv'
-
-ic = Iconv.new("utf-8//IGNORE", "big5")
 
 unless File.exists?("TWSE")
 	Dir.mkdir("TWSE")
@@ -33,7 +30,7 @@ if end_date > DateTime.now
 end
 
 puts "From: " + input_date.strftime('%Y/%m/%d')
-puts "To:   " + end_date.strftime('%Y/%m/%d')
+puts "To:   " +   end_date.strftime('%Y/%m/%d')
 
 sel_type = 'ALLBUT0999'
 
@@ -48,6 +45,6 @@ for d in 0..n
 	 "qdate"=>sel_date, "download"=>"csv", "selectType"=>sel_type)
 
 	open("TWSE/" + current_date.strftime('%Y%m%d') +".csv", "wb") do |file|
-		file.write(ic.iconv(csv.body))
+		file.write((csv.body).encode(Encoding::UTF_8, Encoding::BIG5, :invalid => :replace, :undef => :replace, :replace => ''))
 	end
 end
