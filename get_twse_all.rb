@@ -1,6 +1,9 @@
-# encoding=utf-8 
+# encoding=utf-8
 require 'net/http'
 require 'date'
+require 'iconv'
+
+ic = Iconv.new("utf-8", "big5")
 
 unless File.exists?("TWSE")
 	Dir.mkdir("TWSE")
@@ -45,6 +48,6 @@ for d in 0..n
 	 "qdate"=>sel_date, "download"=>"csv", "selectType"=>sel_type)
 
 	open("TWSE/" + current_date.strftime('%Y%m%d') +".csv", "wb") do |file|
-		file.write(csv.body)
+		file.write(ic.iconv(csv.body))
 	end
 end
